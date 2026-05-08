@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "Food Calorie AI",
+    "slug": "food-calorie-ai",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#4CAF50"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.foodcalorieai.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app needs camera access to scan food images",
+        "NSPhotoLibraryUsageDescription": "This app needs photo library access to upload food images"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#4CAF50"
+      },
+      "package": "com.foodcalorieai.app",
+      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE"]
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos for food scanning.",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera for food scanning."
+        }
+      ],
+      "expo-secure-store"
+    ]
+  }
+}
