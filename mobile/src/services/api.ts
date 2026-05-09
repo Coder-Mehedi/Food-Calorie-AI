@@ -8,7 +8,7 @@ const API_BASE_URL = __DEV__
       ios: 'http://213.35.114.163:3000/api',
       default: 'http://localhost:3000/api',
     })
-  : 'https://your-production-api.com/api';
+  : 'http://213.35.114.163:3000/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
