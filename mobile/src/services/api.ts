@@ -4,8 +4,8 @@ import {Platform} from 'react-native';
 
 const API_BASE_URL = __DEV__
   ? Platform.select({
-      android: 'http://192.168.0.100:3000/api',
-      ios: 'http://localhost:3000/api',
+      android: 'http://213.35.114.163:3000/api',
+      ios: 'http://213.35.114.163:3000/api',
       default: 'http://localhost:3000/api',
     })
   : 'https://your-production-api.com/api';
