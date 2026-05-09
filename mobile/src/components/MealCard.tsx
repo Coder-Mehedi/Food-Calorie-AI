@@ -30,8 +30,15 @@ export function MealCard({meal, isDark, onDelete}: Props) {
           </Text>
         </View>
         <View style={styles.right}>
-          <Text style={styles.calories}>{Math.round(meal.totalCalories)}</Text>
-          <Text style={[styles.calLabel, isDark && styles.textMuted]}>kcal</Text>
+          <View style={styles.calRow}>
+            <Text style={styles.calories}>{Math.round(meal.totalCalories)}</Text>
+            <Text style={[styles.calLabel, isDark && styles.textMuted]}>kcal</Text>
+          </View>
+          {onDelete && (
+            <TouchableOpacity style={styles.deleteBtn} onPress={onDelete}>
+              <Text style={styles.deleteText}>Delete</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
       <View style={styles.macroRow}>
@@ -39,11 +46,6 @@ export function MealCard({meal, isDark, onDelete}: Props) {
         <Text style={[styles.macro, {color: '#FFC107'}]}>C: {meal.totalCarbs.toFixed(1)}g</Text>
         <Text style={[styles.macro, {color: '#2196F3'}]}>F: {meal.totalFat.toFixed(1)}g</Text>
       </View>
-      {onDelete && (
-        <TouchableOpacity style={styles.deleteBtn} onPress={onDelete}>
-          <Text style={styles.deleteText}>Delete</Text>
-        </TouchableOpacity>
-      )}
     </View>
   );
 }
@@ -67,12 +69,13 @@ const styles = StyleSheet.create({
   type: {fontSize: 16, fontWeight: '600', color: '#1A1A2E'},
   date: {fontSize: 12, color: '#9CA3AF', marginTop: 2},
   right: {alignItems: 'flex-end'},
+  calRow: {flexDirection: 'row', alignItems: 'baseline', gap: 4},
   calories: {fontSize: 20, fontWeight: 'bold', color: '#4CAF50'},
   calLabel: {fontSize: 11, color: '#9CA3AF'},
   macroRow: {flexDirection: 'row', gap: 16, marginTop: 12, paddingTop: 12, borderTopWidth: 1, borderTopColor: '#F0F0F5'},
   macro: {fontSize: 13, fontWeight: '600'},
-  deleteBtn: {position: 'absolute', top: 8, right: 8, padding: 4},
-  deleteText: {color: '#EF5350', fontSize: 12},
+  deleteBtn: {marginTop: 6, paddingVertical: 2},
+  deleteText: {color: '#EF5350', fontSize: 12, fontWeight: '600'},
   textLight: {color: '#F1F5F9'},
   textMuted: {color: '#94A3B8'},
 });

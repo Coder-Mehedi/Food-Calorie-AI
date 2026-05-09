@@ -2,7 +2,9 @@ import {
   Controller,
   Post,
   Get,
+  Delete,
   Body,
+  Param,
   UseGuards,
   UseInterceptors,
   UploadedFile,
@@ -70,5 +72,14 @@ export class FoodAnalysisController {
     @Query('startDate') startDate: string,
   ) {
     return this.analysisService.getWeeklyReport(req.user.userId, startDate);
+  }
+
+  @Delete('meals/:id')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete a meal' })
+  async deleteMeal(@Request() req: any, @Param('id') id: string) {
+    await this.analysisService.deleteMeal(req.user.userId, id);
+    return { message: 'Meal deleted' };
   }
 }

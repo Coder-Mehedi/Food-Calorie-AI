@@ -10,8 +10,8 @@ interface Props {
 }
 
 export function CalorieRing({progress, consumed, target, remaining}: Props) {
-  const size = 180;
-  const strokeWidth = 14;
+  const size = 120;
+  const strokeWidth = 10;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference * (1 - Math.min(progress, 1));
@@ -53,7 +53,7 @@ export function CalorieRing({progress, consumed, target, remaining}: Props) {
 const styles = StyleSheet.create({
   container: {alignItems: 'center', justifyContent: 'center'},
   center: {position: 'absolute', alignItems: 'center'},
-  consumed: {fontSize: 32, fontWeight: 'bold', color: '#1A1A2E'},
-  label: {fontSize: 13, color: '#6B7280', marginTop: 2},
-  remaining: {fontSize: 12, color: '#4CAF50', fontWeight: '600', marginTop: 4},
+  consumed: {fontSize: 22, fontWeight: 'bold', color: '#1A1A2E'},
+  label: {fontSize: 10, color: '#6B7280', marginTop: 2},
+  remaining: {fontSize: 9, color: '#4CAF50', fontWeight: '600', marginTop: 2},
 });

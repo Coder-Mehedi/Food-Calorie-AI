@@ -9,6 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 import {useThemeStore} from '@/stores/themeStore';
 import {useProfileStore} from '@/stores/profileStore';
 import {useAuthStore} from '@/stores/authStore';
@@ -27,13 +28,27 @@ export function ProfileScreen() {
   const logout = useAuthStore(s => s.logout);
 
   const [name, setName] = useState('');
-  const [height, setHeight] = useState('');
+  const [heightCm, setHeightCm] = useState('');
+  const [heightFt, setHeightFt] = useState('');
+  const [heightIn, setHeightIn] = useState('');
+  const [useFt, setUseFt] = useState(false);
   const [weight, setWeight] = useState('');
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
   const [goal, setGoal] = useState('');
   const [calorieTarget, setCalorieTarget] = useState('');
   const [suggestedTarget, setSuggestedTarget] = useState<number | null>(null);
+
+  const cmToFtIn = (cm: number) => {
+    const totalInches = cm / 2.54;
+    const ft = Math.floor(totalInches / 12);
+    const inches = Math.round(totalInches % 12);
+    return {ft: ft.toString(), inches: inches.toString()};
+  };
+
+  const ftInToCm = (ft: number, inches: number) => {
+    return Math.round((ft * 12 + inches) * 2.54);
+  };
 
   useEffect(() => {
     loadProfile();
@@ -42,7 +57,13 @@ export function ProfileScreen() {
   useEffect(() => {
     if (profile) {
       setName(profile.name || '');
-      setHeight(profile.height?.toString() || '');
+      const cm = profile.height?.toString() || '';
+      setHeightCm(cm);
+      if (cm) {
+        const {ft, inches} = cmToFtIn(parseFloat(cm));
+        setHeightFt(ft);
+        setHeightIn(inches);
+      }
       setWeight(profile.weight?.toString() || '');
       setAge(profile.age?.toString() || '');
       setGender(profile.gender || '');
@@ -61,16 +82,24 @@ export function ProfileScreen() {
 
   const handleSave = async () => {
     try {
+      let heightValue: number | undefined;
+      if (useFt) {
+        const ft = parseFloat(heightFt) || 0;
+        const inches = parseFloat(heightIn) || 0;
+        if (ft > 0) heightValue = ftInToCm(ft, inches);
+      } else if (heightCm) {
+        heightValue = parseFloat(heightCm);
+      }
       await updateProfile({
         name,
-        height: height ? parseFloat(height) : undefined,
+        height: heightValue,
         weight: weight ? parseFloat(weight) : undefined,
         age: age ? parseInt(age) : undefined,
         gender: gender || undefined,
         fitnessGoal: goal || undefined,
         dailyCalorieTarget: calorieTarget ? parseFloat(calorieTarget) : undefined,
       });
-      Alert.alert('Success', 'Profile updated!');
+      Toast.show({type: 'success', text1: 'Profile updated!', visibilityTime: 2000});
     } catch {
       Alert.alert('Error', 'Failed to update profile');
     }
@@ -92,8 +121,12 @@ export function ProfileScreen() {
         {/* Stats */}
         <View style={[styles.statsRow, isDark && styles.cardDark]}>
           <View style={styles.statItem}>
-            <Text style={[styles.statValue, isDark && styles.textLight]}>{height || '-'}</Text>
-            <Text style={[styles.statLabel, isDark && styles.textMuted]}>Height (cm)</Text>
+            <Text style={[styles.statValue, isDark && styles.textLight]}>
+              {useFt
+                ? heightFt ? `${heightFt}'${heightIn || 0}"` : '-'
+                : heightCm || '-'}
+            </Text>
+            <Text style={[styles.statLabel, isDark && styles.textMuted]}>Height</Text>
           </View>
           <View style={styles.statDivider} />
           <View style={styles.statItem}>
@@ -112,20 +145,32 @@ export function ProfileScreen() {
           <Text style={[styles.sectionTitle, isDark && styles.textLight]}>Personal Info</Text>
           <TextInput style={[styles.input, isDark && styles.inputDark]} placeholder="Name" placeholderTextColor="#9CA3AF" value={name} onChangeText={setName} />
           <View style={styles.row}>
-            <TextInput style={[styles.input, styles.inputHalf, isDark && styles.inputDark]} placeholder="Height (cm)" placeholderTextColor="#9CA3AF" value={height} onChangeText={setHeight} keyboardType="decimal-pad" />
+            {useFt ? (
+              <>
+                <TextInput style={[styles.input, styles.inputSmall, isDark && styles.inputDark]} placeholder="Ft" placeholderTextColor="#9CA3AF" value={heightFt} onChangeText={v => setHeightFt(v)} keyboardType="decimal-pad" />
+                <TextInput style={[styles.input, styles.inputSmall, isDark && styles.inputDark]} placeholder="In" placeholderTextColor="#9CA3AF" value={heightIn} onChangeText={v => setHeightIn(v)} keyboardType="decimal-pad" />
+              </>
+            ) : (
+              <TextInput style={[styles.input, styles.inputHalf, isDark && styles.inputDark]} placeholder="Height (cm)" placeholderTextColor="#9CA3AF" value={heightCm} onChangeText={setHeightCm} keyboardType="decimal-pad" />
+            )}
+            <TouchableOpacity style={[styles.unitToggle, isDark && styles.unitToggleDark]} onPress={() => setUseFt(!useFt)}>
+              <Text style={[styles.unitToggleText, isDark && styles.textLight]}>{useFt ? 'cm' : "ft'in"}</Text>
+            </TouchableOpacity>
             <TextInput style={[styles.input, styles.inputHalf, isDark && styles.inputDark]} placeholder="Weight (kg)" placeholderTextColor="#9CA3AF" value={weight} onChangeText={setWeight} keyboardType="decimal-pad" />
           </View>
           <View style={styles.row}>
-            <TextInput style={[styles.input, styles.inputHalf, isDark && styles.inputDark]} placeholder="Age" placeholderTextColor="#9CA3AF" value={age} onChangeText={setAge} keyboardType="number-pad" />
-            <View style={[styles.genderRow, styles.inputHalf]}>
+            <TextInput style={[styles.input, styles.inputSmall, isDark && styles.inputDark]} placeholder="Age" placeholderTextColor="#9CA3AF" value={age} onChangeText={setAge} keyboardType="number-pad" />
+            <View style={styles.genderRow}>
               <TouchableOpacity
                 style={[styles.genderBtn, gender === 'male' && styles.genderSelected, isDark && styles.genderBtnDark]}
                 onPress={() => setGender('male')}>
+                <Text style={styles.genderIcon}>♂</Text>
                 <Text style={[styles.genderLabel, gender === 'male' && styles.genderLabelSel]}>Male</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.genderBtn, gender === 'female' && styles.genderSelected, isDark && styles.genderBtnDark]}
                 onPress={() => setGender('female')}>
+                <Text style={styles.genderIcon}>♀</Text>
                 <Text style={[styles.genderLabel, gender === 'female' && styles.genderLabelSel]}>Female</Text>
               </TouchableOpacity>
             </View>
@@ -195,10 +240,15 @@ const styles = StyleSheet.create({
   input: {backgroundColor: '#F0F0F5', borderRadius: 12, padding: 14, fontSize: 16, color: '#1A1A2E', marginBottom: 12},
   inputDark: {backgroundColor: '#252540', color: '#F1F5F9'},
   inputHalf: {flex: 1},
-  genderRow: {flexDirection: 'row', gap: 8},
-  genderBtn: {flex: 1, backgroundColor: '#F0F0F5', borderRadius: 12, padding: 14, alignItems: 'center', borderWidth: 2, borderColor: 'transparent'},
+  inputSmall: {flex: 0, width: 80},
+  unitToggle: {justifyContent: 'center', alignItems: 'center', backgroundColor: '#E8F5E9', borderRadius: 10, paddingHorizontal: 12, height: 50},
+  unitToggleDark: {backgroundColor: '#1B3A1B'},
+  unitToggleText: {fontSize: 13, fontWeight: '700', color: '#4CAF50'},
+  genderRow: {flexDirection: 'row', gap: 8, flex: 1},
+  genderBtn: {flex: 1, backgroundColor: '#F0F0F5', borderRadius: 12, padding: 0, height: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, borderWidth: 2, borderColor: 'transparent'},
   genderBtnDark: {backgroundColor: '#252540'},
   genderSelected: {borderColor: '#4CAF50', backgroundColor: '#E8F5E9'},
+  genderIcon: {fontSize: 18, color: '#6B7280'},
   genderLabel: {fontSize: 14, fontWeight: '600', color: '#6B7280'},
   genderLabelSel: {color: '#4CAF50'},
   row: {flexDirection: 'row', gap: 12},

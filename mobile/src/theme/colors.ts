@@ -12,6 +12,19 @@ export const colors = {
   white: '#FFFFFF',
 };
 
+export const lightColors = {
+  background: '#F8F9FA',
+  surface: '#FFFFFF',
+  surfaceGlass: 'rgba(255, 255, 255, 0.7)',
+  surfaceElevated: '#F0F0F5',
+  text: '#1A1A2E',
+  textSecondary: '#4B5563',
+  textMuted: '#9CA3AF',
+  border: 'rgba(0, 0, 0, 0.08)',
+  glow: 'rgba(0, 230, 118, 0.1)',
+  glowAccent: 'rgba(124, 77, 255, 0.1)',
+};
+
 export const darkColors = {
   background: '#0A0A1A',
   surface: '#141428',

@@ -2,6 +2,7 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Ionicons} from '@expo/vector-icons';
+import type {Ionicons as IoniconTypes} from '@expo/vector-icons';
 import {useAuthStore} from '@/stores/authStore';
 import {SplashScreen} from '@/screens/SplashScreen/SplashScreen';
 import {AuthScreen} from '@/screens/AuthScreen/AuthScreen';
@@ -14,7 +15,7 @@ import {AnalysisScreen} from '@/screens/AnalysisScreen/AnalysisScreen';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const TAB_ICONS: Record<string, [string, string]> = {
+const TAB_ICONS: Record<string, [keyof typeof IoniconTypes.glyphMap, keyof typeof IoniconTypes.glyphMap]> = {
   Home: ['home', 'home-outline'],
   Camera: ['camera', 'camera-outline'],
   History: ['time', 'time-outline'],
@@ -31,9 +32,9 @@ function MainTabs() {
           tabBarActiveTintColor: '#00E676',
           tabBarInactiveTintColor: '#606080',
           tabBarStyle: {
-            position: 'absolute',
-            backgroundColor: 'rgba(14, 14, 30, 0.95)',
+            backgroundColor: '#0E0E1E',
             borderTopWidth: 0,
+            borderTopColor: 'transparent',
             paddingBottom: 8,
             paddingTop: 10,
             height: 64,

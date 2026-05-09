@@ -105,6 +105,10 @@ export class FoodAnalysisService {
     return this.mealsService.getWeeklyReport(userId, startDate);
   }
 
+  async deleteMeal(userId: string, mealId: string) {
+    return this.mealsService.deleteMeal(userId, mealId);
+  }
+
   private async compressImage(file: Express.Multer.File): Promise<string> {
     const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.jpg`;
     const outputPath = path.join(this.uploadDir, filename);

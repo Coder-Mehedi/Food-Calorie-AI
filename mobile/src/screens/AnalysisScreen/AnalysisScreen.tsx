@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 import {useThemeStore} from '@/stores/themeStore';
 import {useFoodStore} from '@/stores/foodStore';
 import type {AnalysisResult, MealType} from '@/types';
@@ -57,9 +58,8 @@ export function AnalysisScreen() {
         })),
         result.imageUrl,
       );
-      Alert.alert('Success', 'Meal saved!', [
-        {text: 'OK', onPress: () => navigation.navigate('Main', {screen: 'Home'})},
-      ]);
+      Toast.show({type: 'success', text1: 'Meal saved!', visibilityTime: 2000});
+      navigation.navigate('Main', {screen: 'Home'});
     } catch {
       Alert.alert('Error', 'Failed to save meal');
     } finally {

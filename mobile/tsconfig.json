@@ -15,7 +15,7 @@
     "lib": [
       "ES2021"
     ],
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "target": "ESNext",

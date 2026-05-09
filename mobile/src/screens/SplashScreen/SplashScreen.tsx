@@ -1,10 +1,13 @@
 import React, {useEffect} from 'react';
 import {View, Text, StyleSheet, Animated} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useAuthStore} from '@/stores/authStore';
 
+type NavProp = NativeStackNavigationProp<any>;
+
 export function SplashScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavProp>();
   const isAuthenticated = useAuthStore(s => s.isAuthenticated);
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const glowAnim = React.useRef(new Animated.Value(0.3)).current;

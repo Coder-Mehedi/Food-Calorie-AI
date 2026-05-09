@@ -8,19 +8,19 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
 import {format, startOfWeek} from 'date-fns';
 import {useFoodStore} from '@/stores/foodStore';
 import {useProfileStore} from '@/stores/profileStore';
 import {useThemeStore} from '@/stores/themeStore';
 import {CalorieRing} from '@/components/CalorieRing';
-import {MacroCard} from '@/components/MacroCard';
 import {WeeklyChart} from '@/components/WeeklyChart';
 import {MealCard} from '@/components/MealCard';
 import * as api from '@/services/api';
 
 export function DashboardScreen() {
   const navigation = useNavigation<any>();
+  const isFocused = useIsFocused();
   const {meals, loadMeals} = useFoodStore();
   const {profile, loadProfile} = useProfileStore();
   const {isDark, toggle} = useThemeStore();
@@ -73,8 +73,8 @@ export function DashboardScreen() {
   }, [today]);
 
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    if (isFocused) loadData();
+  }, [isFocused, loadData]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -114,31 +114,43 @@ export function DashboardScreen() {
 
         {/* Calorie Ring */}
         <View style={[styles.card, isDark && styles.cardDark]}>
-          <CalorieRing
-            progress={progress}
-            consumed={todayCalories}
-            target={calorieTarget}
-            remaining={remaining}
-          />
+          <View style={styles.calorieRow}>
+            <View style={styles.calorieInfo}>
+              <Text style={[styles.bigNumber, isDark && styles.textLight]}>{todayCalories}</Text>
+              <Text style={[styles.subLabel, isDark && styles.textMuted]}>of {calorieTarget} kcal</Text>
+              <Text style={styles.remainingText}>{remaining} remaining</Text>
+            </View>
+            <CalorieRing
+              progress={progress}
+              consumed={todayCalories}
+              target={calorieTarget}
+              remaining={remaining}
+            />
+          </View>
           <View style={styles.macroRow}>
-            <MacroCard
-              label="Protein"
-              value={Math.round(todayMacros.protein)}
-              unit="g"
-              color="#EF5350"
-            />
-            <MacroCard
-              label="Carbs"
-              value={Math.round(todayMacros.carbs)}
-              unit="g"
-              color="#FFC107"
-            />
-            <MacroCard
-              label="Fat"
-              value={Math.round(todayMacros.fat)}
-              unit="g"
-              color="#2196F3"
-            />
+            <View style={styles.macroItem}>
+              <View style={styles.macroBar}>
+                <View style={[styles.macroFill, {backgroundColor: '#EF5350', flex: todayMacros.protein || 1}]} />
+              </View>
+              <Text style={[styles.macroValue, isDark && styles.textLight]}>{Math.round(todayMacros.protein)}g</Text>
+              <Text style={[styles.macroName, isDark && styles.textMuted]}>Protein</Text>
+            </View>
+            <View style={styles.macroDivider} />
+            <View style={styles.macroItem}>
+              <View style={styles.macroBar}>
+                <View style={[styles.macroFill, {backgroundColor: '#FFC107', flex: todayMacros.carbs || 1}]} />
+              </View>
+              <Text style={[styles.macroValue, isDark && styles.textLight]}>{Math.round(todayMacros.carbs)}g</Text>
+              <Text style={[styles.macroName, isDark && styles.textMuted]}>Carbs</Text>
+            </View>
+            <View style={styles.macroDivider} />
+            <View style={styles.macroItem}>
+              <View style={styles.macroBar}>
+                <View style={[styles.macroFill, {backgroundColor: '#2196F3', flex: todayMacros.fat || 1}]} />
+              </View>
+              <Text style={[styles.macroValue, isDark && styles.textLight]}>{Math.round(todayMacros.fat)}g</Text>
+              <Text style={[styles.macroName, isDark && styles.textMuted]}>Fat</Text>
+            </View>
           </View>
         </View>
 
@@ -219,11 +231,24 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
   },
   cardDark: {backgroundColor: '#1A1A2E'},
+  calorieRow: {flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'},
+  calorieInfo: {flex: 1},
+  bigNumber: {fontSize: 36, fontWeight: 'bold', color: '#1A1A2E'},
+  subLabel: {fontSize: 14, color: '#6B7280', marginTop: 2},
+  remainingText: {fontSize: 13, color: '#4CAF50', fontWeight: '600', marginTop: 4},
   macroRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 16,
+    marginTop: 20,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F5',
   },
+  macroItem: {flex: 1, alignItems: 'center'},
+  macroBar: {flexDirection: 'row', height: 4, borderRadius: 2, backgroundColor: '#F0F0F5', width: '100%', marginBottom: 8},
+  macroFill: {borderRadius: 2},
+  macroValue: {fontSize: 15, fontWeight: '700', color: '#1A1A2E'},
+  macroName: {fontSize: 11, color: '#6B7280', marginTop: 2},
+  macroDivider: {width: 1, backgroundColor: '#F0F0F5', marginHorizontal: 8},
   section: {paddingHorizontal: 20, marginTop: 16},
   sectionHeader: {
     flexDirection: 'row',

@@ -14,7 +14,8 @@
       "bundleIdentifier": "com.foodcalorieai.app",
       "infoPlist": {
         "NSCameraUsageDescription": "This app needs camera access to scan food images",
-        "NSPhotoLibraryUsageDescription": "This app needs photo library access to upload food images"
+        "NSPhotoLibraryUsageDescription": "This app needs photo library access to upload food images",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -22,7 +23,11 @@
         "backgroundColor": "#4CAF50"
       },
       "package": "com.foodcalorieai.app",
-      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE"]
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "plugins": [
       [
@@ -33,6 +38,11 @@
         }
       ],
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "f3c1756e-3e09-4b73-abbb-ecbf4d059800"
+      }
+    }
   }
 }
