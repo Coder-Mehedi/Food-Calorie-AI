@@ -4,11 +4,11 @@ import {Platform} from 'react-native';
 
 const API_BASE_URL = __DEV__
   ? Platform.select({
-      android: 'http://213.35.114.163:3000/api',
-      ios: 'http://213.35.114.163:3000/api',
-      default: 'http://localhost:3000/api',
+      android: 'https://foodcalorieai.duckdns.org/api',
+      ios: 'https://foodcalorieai.duckdns.org/api',
+      default: 'https://foodcalorieai.duckdns.org/api',
     })
-  : 'http://213.35.114.163:3000/api';
+  : 'https://foodcalorieai.duckdns.org/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
