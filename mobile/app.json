@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Food Calorie AI",
-    "slug": "food-calorie-ai",
+    "name": "Calorie AI",
+    "slug": "calorie-ai",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
@@ -11,7 +11,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.foodcalorieai.app",
+      "bundleIdentifier": "com.stackoverclocker.calorieai",
       "infoPlist": {
         "NSCameraUsageDescription": "This app needs camera access to scan food images",
         "NSPhotoLibraryUsageDescription": "This app needs photo library access to upload food images",
@@ -22,7 +22,7 @@
       "adaptiveIcon": {
         "backgroundColor": "#4CAF50"
       },
-      "package": "com.foodcalorieai.app",
+      "package": "com.stackoverclocker.calorieai",
       "usesCleartextTraffic": true,
       "permissions": [
         "android.permission.CAMERA",

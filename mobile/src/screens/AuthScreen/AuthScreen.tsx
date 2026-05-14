@@ -46,7 +46,7 @@ export function AuthScreen() {
         style={styles.inner}>
         <View style={styles.header}>
           <Text style={styles.icon}>🍽️</Text>
-          <Text style={styles.title}>Food Calorie AI</Text>
+          <Text style={styles.title}>Calorie AI</Text>
           <Text style={styles.subtitle}>
             {isLogin ? 'Welcome back!' : 'Create your account'}
           </Text>

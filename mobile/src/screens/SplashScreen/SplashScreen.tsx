@@ -45,9 +45,6 @@ export function SplashScreen() {
         <Text style={styles.title}>FoodAI</Text>
         <Text style={styles.subtitle}>Snap. Analyze. Track.</Text>
       </Animated.View>
-      <Animated.Text style={[styles.footer, {opacity: fadeAnim}]}>
-        Powered by AI Vision
-      </Animated.Text>
     </View>
   );
 }
@@ -99,12 +96,5 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     marginTop: 8,
     letterSpacing: 2,
-  },
-  footer: {
-    position: 'absolute',
-    bottom: 60,
-    color: '#606080',
-    fontSize: 12,
-    letterSpacing: 1,
   },
 });
